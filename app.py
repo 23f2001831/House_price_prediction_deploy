@@ -90,15 +90,9 @@ class HouseFeatures(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    """
-    Serve the interactive house price prediction UI.
-    """
-
     return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request
-        }
+        request=request,
+        name="index.html"
     )
 
 
