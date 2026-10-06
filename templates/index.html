@@ -1,441 +1,559 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>House Price Predictor</title>
 
-    <link
-        rel="stylesheet"
-        href="/static/style.css"
-    >
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
-    <div class="page">
+<div class="page">
 
-        <!-- Header -->
-        <header class="hero">
+    <!-- HERO -->
+    <header class="hero">
 
-            <div class="badge">
-                ✦ Machine Learning Model
-            </div>
+        <div class="badge">
+            ✦ AI HOUSE PRICE ESTIMATOR
+        </div>
 
-            <h1>
-                House Price
-                <span>Predictor</span>
-            </h1>
+        <h1>
+            What is your house
+            <span>worth?</span>
+        </h1>
 
-            <p>
-                Enter the property details below and let our
-                machine learning model estimate its market value.
-            </p>
+        <p>
+            Tell us a little about the property and its neighborhood.
+            Our machine-learning model will estimate its market value.
+        </p>
 
-        </header>
+    </header>
 
 
-        <!-- Main Application -->
-        <main class="prediction-container">
+    <main class="prediction-container">
 
-            <form id="predictionForm">
+        <form id="predictionForm">
 
-                <!-- Property Details -->
-                <section class="card">
+            <!-- PROPERTY -->
+            <section class="card">
 
-                    <div class="section-heading">
-                        <div class="section-icon">🏠</div>
+                <div class="section-heading">
 
-                        <div>
-                            <h2>Property Details</h2>
-                            <p>Tell us about the property.</p>
-                        </div>
+                    <div class="section-icon">
+                        🏠
                     </div>
 
-
-                    <div class="form-grid">
-
-                        <!-- Income -->
-                        <div class="form-group">
-
-                            <label for="IncomeLevel">
-                                Income Level
-                            </label>
-
-                            <div class="input-wrapper">
-                                <span class="input-prefix">$</span>
-
-                                <input
-                                    type="number"
-                                    id="IncomeLevel"
-                                    name="IncomeLevel"
-                                    placeholder="e.g. 5.2"
-                                    step="any"
-                                    min="0"
-                                    required
-                                >
-                            </div>
-
-                            <small>
-                                Median household income level
-                            </small>
-
-                        </div>
-
-
-                        <!-- Property Age -->
-                        <div class="form-group">
-
-                            <label for="PropertyAge">
-                                Property Age
-                            </label>
-
-                            <div class="input-wrapper">
-
-                                <input
-                                    type="number"
-                                    id="PropertyAge"
-                                    name="PropertyAge"
-                                    placeholder="e.g. 25"
-                                    step="any"
-                                    min="0"
-                                    required
-                                >
-
-                                <span class="input-suffix">
-                                    years
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- Total Rooms -->
-                        <div class="form-group">
-
-                            <label for="TotalRooms">
-                                Total Rooms
-                            </label>
-
-                            <input
-                                type="number"
-                                id="TotalRooms"
-                                name="TotalRooms"
-                                placeholder="e.g. 6"
-                                step="any"
-                                min="1"
-                                required
-                            >
-
-                        </div>
-
-
-                        <!-- Total Bedrooms -->
-                        <div class="form-group">
-
-                            <label for="TotalBedrooms">
-                                Total Bedrooms
-                            </label>
-
-                            <input
-                                type="number"
-                                id="TotalBedrooms"
-                                name="TotalBedrooms"
-                                placeholder="e.g. 3"
-                                step="any"
-                                min="1"
-                                required
-                            >
-
-                        </div>
-
-
-                        <!-- Neighborhood Population -->
-                        <div class="form-group">
-
-                            <label for="NeighborhoodPop">
-                                Neighborhood Population
-                            </label>
-
-                            <input
-                                type="number"
-                                id="NeighborhoodPop"
-                                name="NeighborhoodPop"
-                                placeholder="e.g. 1200"
-                                step="any"
-                                min="0"
-                                required
-                            >
-
-                            <small>
-                                Population in the neighborhood
-                            </small>
-
-                        </div>
-
-
-                        <!-- Average Occupancy -->
-                        <div class="form-group">
-
-                            <label for="AvgOccupancy">
-                                Average Occupancy
-                            </label>
-
-                            <input
-                                type="number"
-                                id="AvgOccupancy"
-                                name="AvgOccupancy"
-                                placeholder="e.g. 3.2"
-                                step="any"
-                                min="0"
-                                required
-                            >
-
-                        </div>
-
+                    <div>
+                        <h2>Property</h2>
+                        <p>Basic characteristics of the property.</p>
                     </div>
-
-                </section>
-
-
-                <!-- Location -->
-                <section class="card">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">
-                            📍
-                        </div>
-
-                        <div>
-                            <h2>Location</h2>
-                            <p>
-                                Geographic information about the property.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="form-grid">
-
-                        <!-- Latitude -->
-                        <div class="form-group">
-
-                            <label for="Latitude">
-                                Latitude
-                            </label>
-
-                            <input
-                                type="number"
-                                id="Latitude"
-                                name="Latitude"
-                                placeholder="e.g. 34.05"
-                                step="any"
-                                required
-                            >
-
-                        </div>
-
-
-                        <!-- Longitude -->
-                        <div class="form-group">
-
-                            <label for="Longitude">
-                                Longitude
-                            </label>
-
-                            <input
-                                type="number"
-                                id="Longitude"
-                                name="Longitude"
-                                placeholder="e.g. -118.24"
-                                step="any"
-                                required
-                            >
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- Derived Features -->
-                <section class="card">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">
-                            📊
-                        </div>
-
-                        <div>
-                            <h2>Household Metrics</h2>
-                            <p>
-                                Additional property characteristics.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="form-grid">
-
-                        <!-- Rooms per household -->
-                        <div class="form-group">
-
-                            <label for="RoomsPerHousehold">
-                                Rooms per Household
-                            </label>
-
-                            <input
-                                type="number"
-                                id="RoomsPerHousehold"
-                                name="RoomsPerHousehold"
-                                placeholder="e.g. 5.8"
-                                step="any"
-                                min="0"
-                                required
-                            >
-
-                            <small>
-                                Average number of rooms per household
-                            </small>
-
-                        </div>
-
-
-                        <!-- Bedrooms ratio -->
-                        <div class="form-group">
-
-                            <label for="BedroomsRatio">
-                                Bedrooms Ratio
-                            </label>
-
-                            <input
-                                type="number"
-                                id="BedroomsRatio"
-                                name="BedroomsRatio"
-                                placeholder="e.g. 0.52"
-                                step="any"
-                                min="0"
-                                required
-                            >
-
-                            <small>
-                                Bedroom-to-room ratio
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- Buttons -->
-                <div class="actions">
-
-                    <button
-                        type="submit"
-                        id="predictButton"
-                        class="predict-button"
-                    >
-
-                        <span id="buttonText">
-                            Estimate House Price
-                        </span>
-
-                        <span
-                            id="loadingSpinner"
-                            class="spinner hidden"
-                        ></span>
-
-                    </button>
-
-
-                    <button
-                        type="button"
-                        id="resetButton"
-                        class="reset-button"
-                    >
-                        Reset
-                    </button>
 
                 </div>
 
-            </form>
+
+                <div class="form-grid">
 
 
-            <!-- Prediction Result -->
-            <section
-                id="resultCard"
-                class="result-card hidden"
-            >
+                    <!-- Income -->
+                    <div class="form-group">
 
-                <div class="result-icon">
-                    ✓
+                        <label for="IncomeLevel">
+                            Household Income
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-prefix">
+                                $
+                            </span>
+
+                            <input
+                                type="number"
+                                id="IncomeLevel"
+                                name="IncomeLevel"
+                                value="75000"
+                                min="10000"
+                                max="150000"
+                                step="1000"
+                                required
+                            >
+
+                        </div>
+
+                        <small>
+                            Approximate median household income
+                            <strong>($10k – $150k)</strong>
+                        </small>
+
+                    </div>
+
+
+                    <!-- Age -->
+                    <div class="form-group">
+
+                        <label for="PropertyAge">
+                            House Age
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="number"
+                                id="PropertyAge"
+                                name="PropertyAge"
+                                value="20"
+                                min="1"
+                                max="52"
+                                step="1"
+                                required
+                            >
+
+                            <span class="input-suffix">
+                                years
+                            </span>
+
+                        </div>
+
+                        <small>
+                            Typical dataset range: 1–52 years
+                        </small>
+
+                    </div>
+
+
+                    <!-- Rooms -->
+                    <div class="form-group">
+
+                        <label for="TotalRooms">
+                            Average Rooms
+                        </label>
+
+                        <input
+                            type="number"
+                            id="TotalRooms"
+                            name="TotalRooms"
+                            value="5"
+                            min="1"
+                            max="15"
+                            step="0.1"
+                            required
+                        >
+
+                        <small>
+                            Average number of rooms per household
+                        </small>
+
+                    </div>
+
+
+                    <!-- Bedrooms -->
+                    <div class="form-group">
+
+                        <label for="TotalBedrooms">
+                            Average Bedrooms
+                        </label>
+
+                        <input
+                            type="number"
+                            id="TotalBedrooms"
+                            name="TotalBedrooms"
+                            value="2"
+                            min="0.5"
+                            max="8"
+                            step="0.1"
+                            required
+                        >
+
+                        <small>
+                            Average bedrooms per household
+                        </small>
+
+                    </div>
+
                 </div>
-
-                <p class="result-label">
-                    ESTIMATED PROPERTY VALUE
-                </p>
-
-                <h2 id="predictionValue">
-                    $0
-                </h2>
-
-                <p class="result-message">
-                    Based on the property information you provided.
-                </p>
-
-                <button
-                    type="button"
-                    id="newPredictionButton"
-                    class="new-prediction-button"
-                >
-                    Try Another Property
-                </button>
 
             </section>
 
 
-            <!-- Error -->
-            <div
-                id="errorMessage"
-                class="error-message hidden"
-            >
-                <strong>Something went wrong.</strong>
-                <span id="errorText">
-                    Please check your inputs and try again.
-                </span>
+            <!-- COMMUNITY -->
+            <section class="card">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        👥
+                    </div>
+
+                    <div>
+                        <h2>Neighborhood</h2>
+                        <p>Tell us about the surrounding community.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+
+                    <!-- Population -->
+                    <div class="form-group">
+
+                        <label for="NeighborhoodPop">
+                            Neighborhood Population
+                        </label>
+
+                        <input
+                            type="number"
+                            id="NeighborhoodPop"
+                            name="NeighborhoodPop"
+                            value="2000"
+                            min="50"
+                            max="35000"
+                            step="50"
+                            required
+                        >
+
+                        <small>
+                            Approximate population of the area
+                        </small>
+
+                    </div>
+
+
+                    <!-- Occupancy -->
+                    <div class="form-group">
+
+                        <label for="AvgOccupancy">
+                            People per Household
+                        </label>
+
+                        <input
+                            type="number"
+                            id="AvgOccupancy"
+                            name="AvgOccupancy"
+                            value="3"
+                            min="1"
+                            max="10"
+                            step="0.1"
+                            required
+                        >
+
+                        <small>
+                            Average number of people living together
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- LOCATION -->
+            <section class="card">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        📍
+                    </div>
+
+                    <div>
+                        <h2>Location</h2>
+                        <p>Where is the property located?</p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+
+                    <!-- City -->
+                    <div class="form-group">
+
+                        <label for="location">
+                            California Location
+                        </label>
+
+                        <select id="location">
+
+                            <option
+                                value="los-angeles"
+                                data-lat="34.0522"
+                                data-lon="-118.2437"
+                            >
+                                Los Angeles
+                            </option>
+
+                            <option
+                                value="san-francisco"
+                                data-lat="37.7749"
+                                data-lon="-122.4194"
+                            >
+                                San Francisco
+                            </option>
+
+                            <option
+                                value="san-diego"
+                                data-lat="32.7157"
+                                data-lon="-117.1611"
+                            >
+                                San Diego
+                            </option>
+
+                            <option
+                                value="sacramento"
+                                data-lat="38.5816"
+                                data-lon="-121.4944"
+                            >
+                                Sacramento
+                            </option>
+
+                            <option
+                                value="fresno"
+                                data-lat="36.7378"
+                                data-lon="-119.7871"
+                            >
+                                Fresno
+                            </option>
+
+                            <option
+                                value="bakersfield"
+                                data-lat="35.3733"
+                                data-lon="-119.0187"
+                            >
+                                Bakersfield
+                            </option>
+
+                            <option
+                                value="riverside"
+                                data-lat="33.9806"
+                                data-lon="-117.3755"
+                            >
+                                Riverside
+                            </option>
+
+                        </select>
+
+                        <small>
+                            Select the closest major location
+                        </small>
+
+                    </div>
+
+
+                    <!-- Coordinates -->
+                    <div class="form-group">
+
+                        <label>
+                            Model Coordinates
+                        </label>
+
+                        <div class="coordinate-display">
+
+                            <span id="coordinateText">
+                                34.0522, -118.2437
+                            </span>
+
+                        </div>
+
+                        <small>
+                            Automatically selected from location
+                        </small>
+
+                    </div>
+
+
+                    <!-- Hidden coordinates -->
+                    <input
+                        type="hidden"
+                        id="Latitude"
+                        name="Latitude"
+                    >
+
+                    <input
+                        type="hidden"
+                        id="Longitude"
+                        name="Longitude"
+                    >
+
+                </div>
+
+            </section>
+
+
+            <!-- CALCULATED -->
+            <section class="card calculated-card">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        ✨
+                    </div>
+
+                    <div>
+                        <h2>Smart Calculations</h2>
+                        <p>
+                            These features are calculated automatically.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="calculated-grid">
+
+                    <div class="calculated-item">
+
+                        <span>
+                            Rooms per Household
+                        </span>
+
+                        <strong id="roomsPerHouseholdDisplay">
+                            1.67
+                        </strong>
+
+                    </div>
+
+
+                    <div class="calculated-item">
+
+                        <span>
+                            Bedroom Ratio
+                        </span>
+
+                        <strong id="bedroomsRatioDisplay">
+                            0.40
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Hidden values sent to API -->
+
+                <input
+                    type="hidden"
+                    id="RoomsPerHousehold"
+                    name="RoomsPerHousehold"
+                >
+
+                <input
+                    type="hidden"
+                    id="BedroomsRatio"
+                    name="BedroomsRatio"
+                >
+
+            </section>
+
+
+            <!-- BUTTONS -->
+            <div class="actions">
+
+                <button
+                    type="submit"
+                    id="predictButton"
+                    class="predict-button"
+                >
+
+                    <span id="buttonText">
+                        Estimate House Price
+                    </span>
+
+                    <span
+                        id="loadingSpinner"
+                        class="spinner hidden"
+                    ></span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="resetButton"
+                    class="reset-button"
+                >
+                    Reset
+                </button>
+
             </div>
 
-        </main>
+        </form>
 
 
-        <!-- Footer -->
-        <footer>
+        <!-- RESULT -->
+        <section
+            id="resultCard"
+            class="result-card hidden"
+        >
 
-            <p>
-                House Price Prediction • Machine Learning Project
+            <div class="result-icon">
+                ✓
+            </div>
+
+            <p class="result-label">
+                ESTIMATED PROPERTY VALUE
             </p>
 
-            <p class="footer-small">
-                Powered by FastAPI &amp; Scikit-learn
+            <h2 id="predictionValue">
+                $0
+            </h2>
+
+            <p class="result-message">
+                Estimated using your property,
+                neighborhood and location details.
             </p>
 
-        </footer>
+            <button
+                type="button"
+                id="newPredictionButton"
+                class="new-prediction-button"
+            >
+                Try Another Property
+            </button>
 
-    </div>
+        </section>
 
 
-    <!-- JavaScript -->
-    <script src="/static/script.js"></script>
+        <!-- ERROR -->
+        <div
+            id="errorMessage"
+            class="error-message hidden"
+        >
+
+            <strong>Something went wrong.</strong>
+
+            <span id="errorText">
+                Please check your inputs and try again.
+            </span>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            House Price Prediction • Machine Learning Project
+        </p>
+
+        <p class="footer-small">
+            Powered by FastAPI &amp; Machine Learning
+        </p>
+
+    </footer>
+
+</div>
+
+
+<script src="/static/script.js"></script>
 
 </body>
 </html>
