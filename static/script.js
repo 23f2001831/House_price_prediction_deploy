@@ -1,27 +1,23 @@
+const predictionForm =
+    document.getElementById("predictionForm");
 
-// =========================================================
-// HOUSE PRICE PREDICTOR
-// Frontend prediction logic
-// =========================================================
+const predictButton =
+    document.getElementById("predictButton");
 
+const buttonText =
+    document.getElementById("buttonText");
 
-// ---------------------------------------------------------
-// Get HTML elements
-// ---------------------------------------------------------
+const loadingSpinner =
+    document.getElementById("loadingSpinner");
 
-const predictionForm = document.getElementById("predictionForm");
+const resetButton =
+    document.getElementById("resetButton");
 
-const predictButton = document.getElementById("predictButton");
+const resultCard =
+    document.getElementById("resultCard");
 
-const buttonText = document.getElementById("buttonText");
-
-const loadingSpinner = document.getElementById("loadingSpinner");
-
-const resetButton = document.getElementById("resetButton");
-
-const resultCard = document.getElementById("resultCard");
-
-const predictionValue = document.getElementById("predictionValue");
+const predictionValue =
+    document.getElementById("predictionValue");
 
 const newPredictionButton =
     document.getElementById("newPredictionButton");
@@ -34,259 +30,428 @@ const errorText =
 
 
 // ---------------------------------------------------------
-// Feature names
+// Elements
 // ---------------------------------------------------------
 
-const featureNames = [
-    "IncomeLevel",
-    "PropertyAge",
-    "TotalRooms",
-    "TotalBedrooms",
-    "NeighborhoodPop",
-    "AvgOccupancy",
-    "Latitude",
-    "Longitude",
-    "RoomsPerHousehold",
-    "BedroomsRatio"
-];
+const incomeInput =
+    document.getElementById("IncomeLevel");
+
+const roomsInput =
+    document.getElementById("TotalRooms");
+
+const bedroomsInput =
+    document.getElementById("TotalBedrooms");
+
+const occupancyInput =
+    document.getElementById("AvgOccupancy");
+
+const locationSelect =
+    document.getElementById("location");
+
+const latitudeInput =
+    document.getElementById("Latitude");
+
+const longitudeInput =
+    document.getElementById("Longitude");
+
+const roomsPerHouseholdInput =
+    document.getElementById("RoomsPerHousehold");
+
+const bedroomsRatioInput =
+    document.getElementById("BedroomsRatio");
+
+const roomsDisplay =
+    document.getElementById("roomsPerHouseholdDisplay");
+
+const bedroomsRatioDisplay =
+    document.getElementById("bedroomsRatioDisplay");
+
+const coordinateText =
+    document.getElementById("coordinateText");
 
 
 // ---------------------------------------------------------
-// Form submission
+// Update location
 // ---------------------------------------------------------
 
-predictionForm.addEventListener("submit", async function (event) {
+function updateLocation() {
 
-    // Prevent normal HTML form submission
-    event.preventDefault();
+    const selected =
+        locationSelect.options[
+            locationSelect.selectedIndex
+        ];
 
-    // Hide old result/error
-    hideResult();
-    hideError();
+    const latitude =
+        Number(selected.dataset.lat);
 
-    // Collect input values
-    const formData = new FormData(predictionForm);
-
-    const data = {};
-
-    for (const feature of featureNames) {
-
-        const value = formData.get(feature);
-
-        if (value === null || value === "") {
-
-            showError(
-                `Please enter a value for ${feature}.`
-            );
-
-            return;
-        }
-
-        const numberValue = Number(value);
-
-        if (!Number.isFinite(numberValue)) {
-
-            showError(
-                `Please enter a valid number for ${feature}.`
-            );
-
-            return;
-        }
-
-        data[feature] = numberValue;
-    }
+    const longitude =
+        Number(selected.dataset.lon);
 
 
-    // -----------------------------------------------------
-    // Basic validation
-    // -----------------------------------------------------
-
-    if (data.TotalBedrooms > data.TotalRooms) {
-
-        showError(
-            "Total bedrooms cannot be greater than total rooms."
-        );
-
-        return;
-    }
+    latitudeInput.value = latitude;
+    longitudeInput.value = longitude;
 
 
-    if (data.PropertyAge < 0) {
-
-        showError(
-            "Property age cannot be negative."
-        );
-
-        return;
-    }
+    coordinateText.textContent =
+        `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+}
 
 
-    if (data.AvgOccupancy < 0) {
+// ---------------------------------------------------------
+// Calculate derived features
+// ---------------------------------------------------------
 
-        showError(
-            "Average occupancy cannot be negative."
-        );
+function updateCalculatedFeatures() {
 
-        return;
-    }
+    const rooms =
+        Number(roomsInput.value);
+
+    const bedrooms =
+        Number(bedroomsInput.value);
+
+    const occupancy =
+        Number(occupancyInput.value);
 
 
-    // -----------------------------------------------------
-    // Calculate derived features if needed
-    // -----------------------------------------------------
-
-    /*
-       If the user enters TotalRooms and TotalBedrooms,
-       these two features can be calculated automatically.
-
-       We still keep the fields in the UI because they are
-       part of the model input.
-    */
+    // RoomsPerHousehold
+    //
+    // Based on the feature relationship used
+    // in the original training data.
 
     if (
-        data.TotalRooms > 0 &&
-        data.TotalBedrooms >= 0
+        Number.isFinite(rooms) &&
+        Number.isFinite(occupancy) &&
+        occupancy > 0
     ) {
 
-        data.BedroomsRatio =
-            data.TotalBedrooms / data.TotalRooms;
+        const roomsPerHousehold =
+            rooms / occupancy;
+
+        roomsPerHouseholdInput.value =
+            roomsPerHousehold;
+
+        roomsDisplay.textContent =
+            roomsPerHousehold.toFixed(2);
+
     }
 
 
-    // -----------------------------------------------------
-    // Start loading state
-    // -----------------------------------------------------
+    // BedroomsRatio
 
-    setLoading(true);
+    if (
+        Number.isFinite(rooms) &&
+        Number.isFinite(bedrooms) &&
+        rooms > 0
+    ) {
 
+        const ratio =
+            bedrooms / rooms;
 
-    try {
+        bedroomsRatioInput.value =
+            ratio;
 
-        // -------------------------------------------------
-        // Send request to FastAPI
-        // -------------------------------------------------
+        bedroomsRatioDisplay.textContent =
+            ratio.toFixed(2);
 
-        const response = await fetch("/predict", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify(data)
-
-        });
+    }
+}
 
 
-        // -------------------------------------------------
-        // Read response
-        // -------------------------------------------------
+// ---------------------------------------------------------
+// Listen for changes
+// ---------------------------------------------------------
 
-        const result = await response.json();
+locationSelect.addEventListener(
+    "change",
+    updateLocation
+);
+
+roomsInput.addEventListener(
+    "input",
+    updateCalculatedFeatures
+);
+
+bedroomsInput.addEventListener(
+    "input",
+    updateCalculatedFeatures
+);
+
+occupancyInput.addEventListener(
+    "input",
+    updateCalculatedFeatures
+);
 
 
-        // -------------------------------------------------
-        // Handle API error
-        // -------------------------------------------------
+// ---------------------------------------------------------
+// Initial values
+// ---------------------------------------------------------
 
-        if (!response.ok) {
+updateLocation();
+updateCalculatedFeatures();
 
-            let message =
-                "Prediction failed. Please try again.";
 
-            if (result.detail) {
-                message = result.detail;
+// ---------------------------------------------------------
+// Submit prediction
+// ---------------------------------------------------------
+
+predictionForm.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+        hideError();
+        hideResult();
+
+        updateCalculatedFeatures();
+
+
+        // ---------------------------------------------
+        // Friendly UI values
+        // ---------------------------------------------
+
+        const incomeDollars =
+            Number(incomeInput.value);
+
+
+        // The trained model expects IncomeLevel
+        // in units of $10,000.
+
+        const incomeModelValue =
+            incomeDollars / 10000;
+
+
+        const data = {
+
+            IncomeLevel:
+                incomeModelValue,
+
+            PropertyAge:
+                Number(
+                    document.getElementById(
+                        "PropertyAge"
+                    ).value
+                ),
+
+            TotalRooms:
+                Number(
+                    roomsInput.value
+                ),
+
+            TotalBedrooms:
+                Number(
+                    bedroomsInput.value
+                ),
+
+            NeighborhoodPop:
+                Number(
+                    document.getElementById(
+                        "NeighborhoodPop"
+                    ).value
+                ),
+
+            AvgOccupancy:
+                Number(
+                    occupancyInput.value
+                ),
+
+            Latitude:
+                Number(
+                    latitudeInput.value
+                ),
+
+            Longitude:
+                Number(
+                    longitudeInput.value
+                ),
+
+            RoomsPerHousehold:
+                Number(
+                    roomsPerHouseholdInput.value
+                ),
+
+            BedroomsRatio:
+                Number(
+                    bedroomsRatioInput.value
+                )
+
+        };
+
+
+        // ---------------------------------------------
+        // Validation
+        // ---------------------------------------------
+
+        if (
+            data.TotalBedrooms >
+            data.TotalRooms
+        ) {
+
+            showError(
+                "Average bedrooms cannot be greater than average rooms."
+            );
+
+            return;
+        }
+
+
+        if (
+            data.IncomeLevel < 1 ||
+            data.IncomeLevel > 15
+        ) {
+
+            showError(
+                "Household income must be between $10,000 and $150,000."
+            );
+
+            return;
+        }
+
+
+        if (
+            data.TotalRooms <= 0 ||
+            data.TotalBedrooms <= 0
+        ) {
+
+            showError(
+                "Rooms and bedrooms must be greater than zero."
+            );
+
+            return;
+        }
+
+
+        // ---------------------------------------------
+        // Loading
+        // ---------------------------------------------
+
+        setLoading(true);
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/predict",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(data)
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result.detail ||
+                    "Prediction failed."
+                );
+
             }
 
-            throw new Error(message);
-        }
+
+            const modelPrediction =
+                Number(result.prediction);
 
 
-        // -------------------------------------------------
-        // Get prediction
-        // -------------------------------------------------
+            if (
+                !Number.isFinite(
+                    modelPrediction
+                )
+            ) {
 
-        const prediction = Number(
-            result.prediction
-        );
+                throw new Error(
+                    "The model returned an invalid prediction."
+                );
+
+            }
 
 
-        if (!Number.isFinite(prediction)) {
+            // -----------------------------------------
+            // IMPORTANT:
+            //
+            // Your model predicts the target in
+            // units of $100,000.
+            //
+            // Example:
+            // 2.85 -> $285,000
+            // -----------------------------------------
 
-            throw new Error(
-                "The server returned an invalid prediction."
+            const housePrice =
+                modelPrediction * 100000;
+
+
+            displayPrediction(
+                housePrice
             );
+
+
+        } catch (error) {
+
+            console.error(
+                "Prediction error:",
+                error
+            );
+
+            showError(
+                error.message ||
+                "Unable to connect to the prediction server."
+            );
+
+        } finally {
+
+            setLoading(false);
+
         }
-
-
-        // -------------------------------------------------
-        // Display prediction
-        // -------------------------------------------------
-
-        displayPrediction(prediction);
-
-
-    } catch (error) {
-
-        console.error(
-            "Prediction error:",
-            error
-        );
-
-        showError(
-            error.message ||
-            "Unable to connect to the prediction server."
-        );
-
-    } finally {
-
-        // Always stop loading
-        setLoading(false);
 
     }
-
-});
+);
 
 
 // ---------------------------------------------------------
 // Display prediction
 // ---------------------------------------------------------
 
-function displayPrediction(prediction) {
+function displayPrediction(price) {
 
-    /*
-       The model's price scale depends on your training data.
-
-       We display the value with commas and two decimal places.
-    */
-
-    const formattedPrice =
-        prediction.toLocaleString(
+    predictionValue.textContent =
+        price.toLocaleString(
             "en-US",
             {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0
             }
         );
 
 
-    predictionValue.textContent =
-        `$${formattedPrice}`;
+    resultCard.classList.remove(
+        "hidden"
+    );
 
 
-    resultCard.classList.remove("hidden");
+    setTimeout(
+        function () {
 
+            resultCard.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
 
-    // Scroll smoothly to result
-    setTimeout(() => {
-
-        resultCard.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-
-    }, 100);
+        },
+        100
+    );
 
 }
 
@@ -297,7 +462,9 @@ function displayPrediction(prediction) {
 
 function setLoading(isLoading) {
 
-    predictButton.disabled = isLoading;
+    predictButton.disabled =
+        isLoading;
+
 
     if (isLoading) {
 
@@ -323,7 +490,7 @@ function setLoading(isLoading) {
 
 
 // ---------------------------------------------------------
-// Reset form
+// Reset
 // ---------------------------------------------------------
 
 resetButton.addEventListener(
@@ -333,8 +500,10 @@ resetButton.addEventListener(
         predictionForm.reset();
 
         hideResult();
-
         hideError();
+
+        updateLocation();
+        updateCalculatedFeatures();
 
         window.scrollTo({
             top: 0,
@@ -346,7 +515,7 @@ resetButton.addEventListener(
 
 
 // ---------------------------------------------------------
-// New prediction button
+// New prediction
 // ---------------------------------------------------------
 
 newPredictionButton.addEventListener(
@@ -356,8 +525,10 @@ newPredictionButton.addEventListener(
         predictionForm.reset();
 
         hideResult();
-
         hideError();
+
+        updateLocation();
+        updateCalculatedFeatures();
 
         window.scrollTo({
             top: 0,
@@ -369,7 +540,7 @@ newPredictionButton.addEventListener(
 
 
 // ---------------------------------------------------------
-// Hide result
+// Helpers
 // ---------------------------------------------------------
 
 function hideResult() {
@@ -381,10 +552,6 @@ function hideResult() {
 }
 
 
-// ---------------------------------------------------------
-// Show error
-// ---------------------------------------------------------
-
 function showError(message) {
 
     errorText.textContent =
@@ -394,22 +561,8 @@ function showError(message) {
         "hidden"
     );
 
-
-    setTimeout(() => {
-
-        errorMessage.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-
-    }, 100);
-
 }
 
-
-// ---------------------------------------------------------
-// Hide error
-// ---------------------------------------------------------
 
 function hideError() {
 
