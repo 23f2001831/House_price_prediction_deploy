@@ -1,0 +1,16 @@
+{
+  "records": [
+    {
+      "IncomeLevel": 1.5770447772,
+      "PropertyAge": 24.9502932403,
+      "TotalRooms": 4.280939233,
+      "TotalBedrooms": 1.0548677487,
+      "NeighborhoodPop": 1362.3076373432,
+      "AvgOccupancy": 3.9540105113,
+      "Latitude": 36.06,
+      "Longitude": -119.01,
+      "RoomsPerHousehold": 1.0811781609,
+      "BedroomsRatio": 0.2438538206
+    }
+  ]
+}
