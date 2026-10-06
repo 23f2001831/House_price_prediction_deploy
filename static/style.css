@@ -785,5 +785,91 @@ footer {
     .result-card {
         padding: 35px 20px;
     }
+   /* Location dropdown */
+
+select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border-color, #d9dce3);
+    border-radius: 12px;
+    background: white;
+    font-size: 15px;
+    color: #17181c;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+select:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+}
+
+
+/* Coordinates */
+
+.coordinate-display {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #f5f6fa;
+    border: 1px solid #e1e3e9;
+    font-family: monospace;
+    font-size: 14px;
+    color: #444;
+}
+
+
+/* Calculated features */
+
+.calculated-card {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(108, 99, 255, 0.04),
+            rgba(255, 255, 255, 0.9)
+        );
+}
+
+
+.calculated-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+
+.calculated-item {
+    padding: 18px;
+    border-radius: 14px;
+    background: white;
+    border: 1px solid #e6e7ec;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.calculated-item span {
+    color: #666;
+    font-size: 14px;
+}
+
+
+.calculated-item strong {
+    font-size: 20px;
+    color: #17181c;
+}
+
+
+/* Mobile */
+
+@media (max-width: 650px) {
+
+    .calculated-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
 
 }
